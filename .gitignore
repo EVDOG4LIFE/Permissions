@@ -1,0 +1,24 @@
+# Rust
+/target
+**/*.rs.bk
+
+# Node
+/node_modules
+/frontend/node_modules
+npm-debug.log
+yarn-error.log
+
+# Docker
+Dockerfile.*.bak
+*.dockerignore
+.dockerignore
+.docker/
+
+# Environment files
+.env
+
+# IDE - Visual Studio Code
+.vscode/
+
+# Miscellaneous
+.DS_Store
