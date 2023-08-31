@@ -2,56 +2,70 @@
 
 ## Status: Work in Progress
 
-### Table of Contents
-1. [Overview](#overview)
-2. [Kanban Board](#kanban-board)
-3. [Problem Statements](#problem-statements)
-4. [Root Cause Analysis](#root-cause-analysis)
-5. [4 Whys](#4-whys)
-6. [`.gitignore` File](#gitignore-file)
-7. [Next Steps](#next-steps)
-
----
-
 ## Overview
-This project involves a backend written in Rust, a frontend in Node.js, and containerization through Docker.
 
----
+This project is an attempt to build a full-stack application using Rust for the backend, Node.js for the frontend, and Docker for containerization for a self service Permissions tool in an enterprise environment. 
 
-## Kanban Board
-- **To Do**: Debugging, Docker image optimization, UI, test LDAP 
-- **Doing**: Rust code troubleshooting, `.gitignore` setup
-- **Done**: Initial setup, Dependency Installation
+### Components
 
----
+- **Backend**: Rust
+    - Framework: Rocket
+    - Database: SQLite
+    - Other Libraries: `jsonwebtoken`, `ldap3`
+- **Frontend**: Node.js
+    - Framework: React (assumed, not specified)
+- **Containerization**: Docker
 
-## Problem Statements
-- Various build and runtime errors in the Rust code and Docker setup.
-- Need for a `.gitignore` file.
+## Current State
 
----
+### Completed
 
-## Root Cause Analysis
-- Rust: Errors due to mismatched versions and configurations.
-- Docker: Errors due to inadequate setup of shared libraries and dependencies.
-- Lack of `.gitignore` leads to potential commit of unwanted files.
+- Basic setup of Rust backend with Rocket framework.
+- Dockerization of Rust backend.
+- Setup JWT and LDAP (though LDAP is not fully functional).
+- SQL connection established.
 
----
+### Issues
 
-## 4 Whys
-1. What languages and tools are in use?
-    - Rust, Node.js, Docker
-2. Why is a `.gitignore` necessary?
-    - To keep the repo clean and secure by ignoring files that shouldn't be versioned.
-3. What types of files should be ignored?
-    - Compiled binaries, dependency folders, environment variables, and Docker build artifacts.
-4. Where should the `.gitignore` file be placed?
-    - Root of the project directory.
-
----
+- LDAP setup is failing due to the absence of an Active Directory.
+- There were initial Docker build issues, specifically with library dependencies like SQLite and SSL.
+- The application is not sending any data when accessed via a browser.
 
 ## Next Steps
-1. Debug the Rust code to resolve build and runtime issues.
-2. Optimize the Docker setup to include all necessary shared libraries.
-3. Perform comprehensive testing.
-4. Implement additional features and optimizations.
+
+1. **Debug LDAP Setup**: Either ensure that LDAP is correctly set up or handle its absence gracefully in the code.
+2. **Docker Build Issues**: Update the Dockerfile to correctly handle dependencies.
+3. **Application Response**: Debug why the application isn't sending any data on being accessed via a browser.
+4. **Frontend**: Finalize the frontend part of the application, ensure it can communicate with the backend.
+5. **Testing**: Once all components are in place, perform end-to-end testing to ensure everything is working as expected.
+
+## Dockerfile
+
+For reference, the Dockerfile used for the project is attached below.
+
+```Dockerfile
+# Build Rust backend
+FROM rust:latest as rust-build
+WORKDIR /usr/src/app
+COPY ./Cargo.toml ./Cargo.toml
+COPY ./src ./src
+RUN apt-get update && apt-get install -y libsqlite3-dev
+RUN cargo build --release
+
+# Build Node.js frontend
+FROM node:14 as node-build
+WORKDIR /usr/app
+COPY ./frontend/package.json ./
+RUN npm install
+COPY ./frontend/ ./
+RUN npm run build
+
+# Final image
+FROM debian:buster
+WORKDIR /app
+COPY --from=rust-build /usr/src/app/target/release/permissions /app/permissions
+COPY --from=node-build /usr/app/build /app/frontend/build
+RUN apt-get update && apt-get install -y libsqlite3-0 libssl-dev
+EXPOSE 8000
+CMD [ "./permissions" ]
+```
