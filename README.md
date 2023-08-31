@@ -13,7 +13,7 @@ This project is an attempt to build a full-stack application using Rust for the 
     - Database: SQLite
     - Other Libraries: `jsonwebtoken`, `ldap3`
 - **Frontend**: Node.js
-    - Framework: React (assumed, not specified)
+    - Framework: React
 - **Containerization**: Docker
 
 ## Current State
