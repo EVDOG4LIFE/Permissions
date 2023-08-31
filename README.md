@@ -1,4 +1,4 @@
-# Rust + Node.js + Docker Project
+# Permissions
 
 ## Status: Work in Progress
 
@@ -19,7 +19,7 @@ This project involves a backend written in Rust, a frontend in Node.js, and cont
 ---
 
 ## Kanban Board
-- **To Do**: Debugging, Docker image optimization
+- **To Do**: Debugging, Docker image optimization, UI, test LDAP 
 - **Doing**: Rust code troubleshooting, `.gitignore` setup
 - **Done**: Initial setup, Dependency Installation
 
@@ -47,38 +47,6 @@ This project involves a backend written in Rust, a frontend in Node.js, and cont
     - Compiled binaries, dependency folders, environment variables, and Docker build artifacts.
 4. Where should the `.gitignore` file be placed?
     - Root of the project directory.
-
----
-
-## `.gitignore` File
-The `.gitignore` file should contain the following:
-
-\`\`\`gitignore
-# Rust
-/target
-**/*.rs.bk
-
-# Node
-/node_modules
-/frontend/node_modules
-npm-debug.log
-yarn-error.log
-
-# Docker
-Dockerfile.*.bak
-*.dockerignore
-.dockerignore
-.docker/
-
-# Environment files
-.env
-
-# IDE - Visual Studio Code
-.vscode/
-
-# Miscellaneous
-.DS_Store
-\`\`\`
 
 ---
 
